@@ -237,7 +237,7 @@ set laststatus=2
 set statusline=
 set statusline+=%#PmenuSel#
 set statusline+=%#LineNr#
-set statusline+=\ %{HasPaste()}%F%m%r%h\ %w
+set statusline+=\ %{HasPaste()}%f%m%r%h\ %w
 set statusline+=%=
 set statusline+=%#CursorColumn#
 set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
@@ -267,8 +267,8 @@ endif
 
 imap jk <Esc>
 imap kj <Esc>
-vnoremap <C-c> "+y
-nnoremap <C-v> "+p
+inoremap <C-c> <Esc>"+yi
+inoremap <C-v> <Esc>"+pi
 nnoremap : ;
 nnoremap ; :
 nnoremap o o<Esc>
