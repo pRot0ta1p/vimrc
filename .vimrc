@@ -1,258 +1,144 @@
-" Sections:
-"    -> General
-"    -> VIM user interface
-"    -> Colors and Fonts
-"    -> Files and backups
-"    -> Text, tab and indent related
-"    -> Visual mode related
-"    -> Moving around, tabs and buffers
-"    -> Status line
-"    -> Editing mappings
-"    -> vimgrep searching and cope displaying
-"    -> Spell checking
-"    -> Misc
-"    -> Helper functions
-"    -> plugin setting
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call plug#begin('C:\\Program Files\ (x86)\\Vim\\plugged')
 
+Plug 'lervag/vimtex'
+Plug 'w0rp/ale'
+Plug 'Valloric/YouCompleteMe'
+Plug 'vim-pandoc/vim-pandoc-syntax' 
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'altercation/vim-colors-solarized'
+call plug#end()
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Sets how many lines of history VIM has to remember
-set history=500
-set nocompatible
-set path+=**
-" Enable filetype plugins
+set history=1000
 filetype plugin on
 filetype indent on
+syntax enable
+set ai
 
-" Set to auto read when a file is changed from the outside
 set autoread
-
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
-let mapleader = ","
-
-execute pathogen#infect('bundle\{}', '$VIM\vimfiles\bundle\{}')
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Set 7 lines to the cursor - when moving vertically using j/k
-set so=5
-
-" Avoid garbled characters in Chinese language windows OS
-let $LANG='en' 
-set langmenu=en
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
-
-" Turn on the Wild menu
+set guifont=Fira_Code_Retina:h16:cANSI:qDRAFT
 set wildmenu
-
-" Ignore compiled files
-set wildignore=*.o,*~,*.pyc
-if has("win16") || has("win32")
-    set wildignore+=.git\*,.hg\*,.svn\*
-else
-    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-endif
-
-"Always show current position
 set ruler
-
-set relativenumber
-" Height of the command bar
-set cmdheight=1
-
-" A buffer becomes hidden when it is abandoned
-set hid
-
-" Configure backspace so it acts as it should act
+set nocompatible
 set backspace=eol,start,indent
 set whichwrap+=<,>,h,l
-
-" Ignore case when searching
 set ignorecase
-
-" When searching try to be smart about cases 
 set smartcase
-
-" Highlight search results
 set hlsearch
-
-" Makes search act like search in modern browsers
-set incsearch 
-
-" Don't redraw while executing macros (good performance config)
-set lazyredraw 
-
-" For regular expressions turn magic on
-set magic
-
-" Show matching brackets when text indicator is over them
-set showmatch 
-" How many tenths of a second to blink when matching brackets
-set mat=2
-
-" No annoying sound on errors
+set incsearch
 set noerrorbells
 set novisualbell
 set t_vb=
 set tm=500
-
-" Add a bit extra margin to the left
-set foldcolumn=1
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-syntax enable 
+set lazyredraw 
+set magic
+set showmatch 
+set mat=2
+set ffs=unix,dos,mac
+set expandtab
+set smarttab
+set shiftwidth=4
+set si 
+set wrap 
+set tabstop=4
+set path+=**
+set runtimepath+=D:/vimplugins/YouCompleteMe
+set clipboard+=unnamed
 set background=dark
-colorscheme solarized
-" Set extra options when running in GUI mode
+colorscheme Solarized
+set so=5
+set relativenumber
+set cmdheight=1
+set hid
+set shortmess+=I
+set encoding=utf8
+set ffs=unix,dos,mac
+set splitbelow
+set splitright
+
 if has("gui_running")
-    set guioptions-=m
     set guioptions-=T
-    set guioptions-=r
-    set guioptions-=L
     set guioptions-=e
+    set guioptions-=m
+    set guioptions-=t
+    set guioptions-=r
+    set guioptions-=R
+    set guioptions-=L
+    set guioptions-=b
+    set guioptions-=l
     set t_Co=256
     set guitablabel=%M\ %t
 endif
 
-" Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf8
+"silent function! Fixpath()
+"        let b:fixpath="'" . escape(expand('%:p'), ' \') . "'"
+"endfunction
 
-" Use Unix as the standard file type
-set ffs=unix,dos,mac
+"function! CompileRmd()
+"    execute '! Rscript -e "library(rmarkdown);render("'.expand('%:p').'")"'
+"endfunction
 
-set guifont=IBM_Plex_Mono:h15:cANSI:qDRAFT
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
-set noswapfile
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Use spaces instead of tabs
-set expandtab
-
-" Be smart when using tabs ;)
-set smarttab
-
-" 1 tab == 4 spaces
-set shiftwidth=4
-set tabstop=4
-
-" Linebreak on 500 characters
-set lbr
-set tw=500
-
-set ai "Auto indent
-set si "Smart indent
-set wrap "Wrap lines
-
-
-""""""""""""""""""""""""""""""
-" => Visual mode related
-""""""""""""""""""""""""""""""
-" Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
+let mapleader = ","
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
-
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Moving around, tabs, windows and buffers
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
+autocmd Filetype rmd nnoremap  <leader>cp :execute 'silent !Rscript -e "library(rmarkdown);rmarkdown::render("' . "'" . escape(expand('%:p'), ' \') . "'" . '", encoding = ' . "'" . 'UTF-8' ."'" .')"'<CR>
+autocmd Filetype pandoc.markdown nnoremap <leader>cp :execute 'silent !Rscript -e "library(rmarkdown);render("' . "'" . escape(expand('%:p'), ' \') . "'" . '", encoding = ' . "'" . 'UTF-8' ."'" .')"'<CR>
 
-" Smart way to move between windows
+autocmd Filetype tex nnoremap <leader>cp <plug>(vimtex_compile)
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
-
-" Close the current buffer
-map <leader>bd :Bclose<cr>:tabclose<cr>gT
-
-" Close all the buffers
-map <leader>ba :bufdo bd<cr>
-
-map <leader>l :bnext<cr>
-map <leader>h :bprevious<cr>
-
-" Useful mappings for managing tabs
-map <leader>tn :tabnew<cr>
-map <leader>to :tabonly<cr>
-map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove 
-map <leader>t<leader> :tabnext 
-
-" Let 'tl' toggle between this and the last accessed tab
+noremap <leader>bc :Bclose<cr>:tabclose<cr>gT
+noremap <leader>bca :bufdo bd<cr>
+noremap <leader>l :bnext<cr>
+noremap <leader>h :bprevious<cr>
+noremap <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+noremap <leader>tn :tabnew<cr>
+noremap <leader>to :tabonly<cr>
+noremap <leader>tc :tabclose<cr>
+noremap <leader>tm :tabmove<cr>
+noremap <leader>t<leader> :tabnext<cr>
 let g:lasttab = 1
-nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
+nnoremap <Leader>tl :exe "tabn ".g:lasttab<CR>
 au TabLeave * let g:lasttab = tabpagenr()
-
-
-" Opens a new tab with the current buffer's path
-" Super useful when editing files in the same directory
-map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
-
-" Switch CWD to the directory of the open buffer
-map <leader>cd :cd %:p:h<cr>:pwd<cr>
-
-" Specify the behavior when switching between buffers 
+noremap <leader>cd :cd %:p:h<cr>:pwd<cr>
 try
   set switchbuf=useopen,usetab,newtab
   set stal=2
 catch
 endtry
-
-" Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+map 0 ^
+inoremap jk <Esc>
+inoremap kj <Esc>
+nnoremap ; :
+nnoremap o o<Esc>
+nnoremap O O<Esc>
+noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+map <leader>pp :setlocal paste!<cr>
+nnoremap <silent> n n:call HLNext(0.1)<cr>
+nnoremap <silent> N N:call HLNext(0.1)<cr>
+cnoreabbrev rc $VIM/.vimrc
+cnoreabbrev doc D:/Document
 
-
-""""""""""""""""""""""""""""""
-" => Status line
-""""""""""""""""""""""""""""""
-" Always show the status line
 set laststatus=2
-
-" Format the status line
-"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
-
-
-set statusline=
-set statusline+=%#PmenuSel#
-set statusline+=%#LineNr#
+set statusline=[%l,%c]
 set statusline+=\ %{HasPaste()}%f%m%r%h\ %w
 set statusline+=%=
-set statusline+=%#CursorColumn#
+set statusline+=CWD:\ %{getcwd()}\ 
 set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
 set statusline+=\[%{&fileformat}\]
+
 set statusline+=\ %p%%
-set statusline+=\ %l:%c
-set statusline+=\ 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Editing mappings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Remap VIM 0 to first non-blank character
-map 0 ^
 
+let g:python3_host_prog = 'D:/Python/'
 
-" Delete trailing white space on save, useful for some filetypes ;)
+augroup pandoc_syntax
+        au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
+augroup END
+
 fun! CleanExtraSpaces()
     let save_cursor = getpos(".")
     let old_query = getreg('/')
@@ -265,43 +151,6 @@ if has("autocmd")
     autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif
 
-imap jk <Esc>
-imap kj <Esc>
-inoremap <C-c> <Esc>"+yi
-inoremap <C-v> <Esc>"+pi
-nnoremap : ;
-nnoremap ; :
-nnoremap o o<Esc>
-nnoremap O O<Esc>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Spell checking
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Pressing ,ss will toggle and untoggle spell checking
-"map <leader>ss :setlocal spell!<cr>
-"
-"" Shortcuts using <leader>
-"map <leader>sn ]s
-"map <leader>sp [s
-"map <leader>sa zg
-"map <leader>s? z=
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Misc
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Remove the Windows ^M - when the encodings gets messed up
-noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
-
-" Toggle paste mode on and off
-map <leader>pp :setlocal paste!<cr>
-
-set shortmess+=I
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Helper functions
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Returns true if paste mode is enabled
 function! HasPaste()
     if &paste
         return 'PASTE MODE  '
@@ -309,7 +158,6 @@ function! HasPaste()
     return ''
 endfunction
 
-" Don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
 function! <SID>BufcloseCloseIt()
     let l:currentBufNum = bufnr("%")
@@ -351,10 +199,6 @@ function! VisualSelection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 
-" Damian Conway's Die Blink?nmatchen: highlight matches
-nnoremap <silent> n n:call HLNext(0.1)<cr>
-nnoremap <silent> N N:call HLNext(0.1)<cr>
-
 function! HLNext (blinktime)
   let target_pat = '\c\%#'.@/
   let ring = matchadd('ErrorMsg', target_pat, 101)
@@ -363,10 +207,6 @@ function! HLNext (blinktime)
   call matchdelete(ring)
   redraw
 endfunction
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => plugin settings
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "vimtex setting
 let g:vimtex_view_method = 'mupdf'
@@ -387,20 +227,6 @@ augroup vimtex_event_1
   au!
   au User VimtexEventQuit     call vimtex#compiler#clean(0)
 augroup END
-"syntastic setting
-let g:syntastic_tex_checkers = ['lacheck']
-let g:syntastic_tex_lacheck_quiet_messages = { 'regex': '\Vpossible unwanted space at' }
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
 
-"vimcompleteme setting
-  augroup VimCompletesMeTex
-    autocmd!
-    autocmd FileType tex
-        \ let b:vcm_omni_pattern = g:vimtex#re#neocomplete
-  augroup END
+
+let g:UltiSnipsExpandTrigger = "<C-j>"
